@@ -4,6 +4,7 @@ const projects = [
     id: "tolkeklar",
     title: "Tolkeklar",
     author: "Nicklas Kleczewski",
+    description: "projects/tolkeklar/description.txt",
     file: "projects/tolkeklar/index.html",
     image: "projects/tolkeklar/thumbnail.png",
   },
@@ -11,6 +12,7 @@ const projects = [
     id: "planlaegger-app",
     title: "Planlægger app",
     author: "Christian",
+    description: "projects/planlaegger-app/description.txt",
     file: "projects/planlaegger-app/index.html",
     image: "projects/planlaegger-app/thumbnail.png",
   },
@@ -18,6 +20,7 @@ const projects = [
     id: "tilgaengeligheds-rpg",
     title: "Tilgængeligheds RPG",
     author: "Christian",
+    description: "projects/tilgaengeligheds-rpg/description.txt",
     file: "projects/tilgaengeligheds-rpg/index.html",
     image: "projects/tilgaengeligheds-rpg/thumbnail.png",
   },
@@ -25,6 +28,7 @@ const projects = [
     id: "bpa-overblik",
     title: "BPA Overblik",
     author: "Jonas Dreiøe",
+    description: "projects/bpa-overblik/description.txt",
     type: "teaser",
     image: "projects/bpa-overblik/thumbnail.png",
     github: "https://github.com/Jdreioe/BPA_Overblik",
@@ -60,6 +64,19 @@ if (selected) {
   document.title = `${selected.title} — Workshopprojekter`;
   document.querySelector("#project-title").textContent = selected.title;
   document.querySelector("#project-author").textContent = selected.author;
+  const description = document.querySelector("#project-description");
+  if (selected.description) {
+    fetch(selected.description)
+      .then((response) => {
+        if (!response.ok) throw new Error("Beskrivelsen kunne ikke indlæses.");
+        return response.text();
+      })
+      .then((text) => {
+        description.textContent = text.trim();
+        description.hidden = !description.textContent;
+      })
+      .catch(() => {});
+  }
   if (selected.type === "teaser") {
     projectFrame.hidden = true;
     teaser.hidden = false;
@@ -131,3 +148,5 @@ if (selected) {
     gallery.append(card);
   }
 }
+
+
