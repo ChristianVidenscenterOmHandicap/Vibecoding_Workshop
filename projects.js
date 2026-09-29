@@ -2,21 +2,24 @@
 const projects = [
   {
     id: "tolkeklar",
-    title: "Tolkeklar — møder med ro i maven",
+    title: "Tolkeklar",
     author: "Nicklas Kleczewski",
     file: "projects/tolkeklar/index.html",
+    image: "projects/tolkeklar/thumbnail.png",
   },
   {
     id: "planlaegger-app",
-    title: "Ro — ADHD planlægger",
+    title: "Planlægger app",
     author: "Christian",
     file: "projects/planlaegger-app/index.html",
+    image: "projects/planlaegger-app/thumbnail.png",
   },
   {
     id: "tilgaengeligheds-rpg",
-    title: "Tilgængeligheds-RPG",
+    title: "Tilgængeligheds RPG",
     author: "Christian",
     file: "projects/tilgaengeligheds-rpg/index.html",
+    image: "projects/tilgaengeligheds-rpg/thumbnail.png",
   },
 ];
 

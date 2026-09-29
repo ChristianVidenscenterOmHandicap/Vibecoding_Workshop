@@ -1,12 +1,12 @@
 :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #202321; background: #f7f7f4; }
 * { box-sizing: border-box; }
 body { margin: 0; min-height: 100vh; }
-.gallery { width: min(1480px, 100%); margin: 0 auto; padding: clamp(16px, 3vw, 44px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(12px, 2vw, 26px); }
+.gallery { width: min(1480px, 100%); margin: 0 auto; padding: clamp(16px, 3vw, 44px); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(12px, 2vw, 26px); row-gap: clamp(30px, 4vw, 48px); }
 .project-card { color: inherit; text-decoration: none; min-width: 0; }
 .project-card:focus-visible, .back-link:focus-visible { outline: 3px solid #315e52; outline-offset: 4px; }
 .project-image { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #e4e8e2; border-radius: 8px; }
 .project-placeholder { display: grid; place-items: center; color: #667269; background: linear-gradient(135deg, #e5ebe5, #d9e2dc); font-size: clamp(1.2rem, 4vw, 3rem); font-weight: 650; letter-spacing: -.06em; }
-.project-card h2 { font-size: clamp(1rem, 1.7vw, 1.3rem); line-height: 1.25; margin: 12px 0 3px; }
+.project-card h2 { font-size: clamp(1rem, 1.7vw, 1.3rem); line-height: 1.25; margin: 14px 0 3px; }
 .project-card p, #project-author { color: #69716c; font-size: .9rem; margin: 0; }
 .empty-state { grid-column: 1 / -1; margin: 0; padding: 12vh 16px; color: #69716c; text-align: center; }
 .detail { min-height: 100vh; display: flex; flex-direction: column; }
