@@ -21,12 +21,38 @@ const projects = [
     file: "projects/tilgaengeligheds-rpg/index.html",
     image: "projects/tilgaengeligheds-rpg/thumbnail.png",
   },
+  {
+    id: "bpa-overblik",
+    title: "BPA Overblik",
+    author: "Jonas Dreiøe",
+    type: "teaser",
+    image: "projects/bpa-overblik/thumbnail.png",
+    github: "https://github.com/Jdreioe/BPA_Overblik",
+    release: "https://github.com/Jdreioe/BPA_Overblik/releases/latest",
+    screenshots: [
+      {
+        file: "projects/bpa-overblik/vagtplan.png",
+        title: "Vagtplan",
+        alt: "Ugevisning med planlagte vagter. Hjælpernavne er skjult.",
+      },
+      {
+        file: "projects/bpa-overblik/kompensation.png",
+        title: "Kompensationsydelse",
+        alt: "Appens fane til registrering af udgifter og kørsel.",
+      },
+    ],
+  },
 ];
 
 const gallery = document.querySelector("#gallery");
 const detail = document.querySelector("#detail");
 const params = new URLSearchParams(location.search);
 const selected = projects.find((project) => project.id === params.get("projekt"));
+const projectFrame = document.querySelector("#project-frame");
+const teaser = document.createElement("section");
+teaser.className = "teaser";
+teaser.hidden = true;
+detail.append(teaser);
 
 if (selected) {
   gallery.hidden = true;
@@ -34,7 +60,46 @@ if (selected) {
   document.title = `${selected.title} — Workshopprojekter`;
   document.querySelector("#project-title").textContent = selected.title;
   document.querySelector("#project-author").textContent = selected.author;
-  document.querySelector("#project-frame").src = selected.file;
+  if (selected.type === "teaser") {
+    projectFrame.hidden = true;
+    teaser.hidden = false;
+
+    const links = document.createElement("nav");
+    links.className = "teaser-links";
+    links.setAttribute("aria-label", "Links til BPA Overblik");
+    for (const [label, href, style] of [
+      ["Se projektet på GitHub", selected.github, "primary"],
+      ["Hent seneste udgave", selected.release, "secondary"],
+    ]) {
+      const link = document.createElement("a");
+      link.className = `teaser-link ${style}`;
+      link.href = href;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = label;
+      links.append(link);
+    }
+    teaser.append(links);
+
+    const screenshots = document.createElement("div");
+    screenshots.className = "teaser-screenshots";
+    for (const screenshot of selected.screenshots) {
+      const figure = document.createElement("figure");
+      figure.className = "teaser-screenshot";
+      const image = document.createElement("img");
+      image.src = screenshot.file;
+      image.alt = screenshot.alt;
+      image.loading = "lazy";
+      const caption = document.createElement("figcaption");
+      caption.textContent = screenshot.title;
+      figure.append(image, caption);
+      screenshots.append(figure);
+    }
+    teaser.append(screenshots);
+  } else {
+    projectFrame.hidden = false;
+    projectFrame.src = selected.file;
+  }
 } else {
   if (projects.length === 0) {
     const empty = document.createElement("p");
