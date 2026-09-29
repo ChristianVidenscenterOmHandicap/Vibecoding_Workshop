@@ -9,22 +9,6 @@ const projects = [
     image: "projects/tolkeklar/thumbnail.png",
   },
   {
-    id: "planlaegger-app",
-    title: "Planlægger app",
-    author: "Christian",
-    description: "projects/planlaegger-app/description.txt",
-    file: "projects/planlaegger-app/index.html",
-    image: "projects/planlaegger-app/thumbnail.png",
-  },
-  {
-    id: "tilgaengeligheds-rpg",
-    title: "Tilgængeligheds RPG",
-    author: "Christian",
-    description: "projects/tilgaengeligheds-rpg/description.txt",
-    file: "projects/tilgaengeligheds-rpg/index.html",
-    image: "projects/tilgaengeligheds-rpg/thumbnail.png",
-  },
-  {
     id: "bpa-overblik",
     title: "BPA Overblik",
     author: "Jonas Dreiøe",
@@ -148,5 +132,6 @@ if (selected) {
     gallery.append(card);
   }
 }
+
 
 
