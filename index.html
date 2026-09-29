@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <title>Workshopprojekter</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="projects.js" defer></script>
+</head>
+<body>
+  <main class="gallery" id="gallery" aria-label="Workshopprojekter"></main>
+  <main class="detail" id="detail" hidden>
+    <header class="detail-header">
+      <a class="back-link" href="./" aria-label="Tilbage til forsiden">←</a>
+      <div><h1 id="project-title"></h1><p id="project-author"></p></div>
+    </header>
+    <iframe id="project-frame" title="Projektvisning" sandbox="allow-scripts allow-forms allow-modals" allow="fullscreen"></iframe>
+  </main>
+</body>
+</html>
