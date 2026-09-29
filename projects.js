@@ -1,7 +1,23 @@
 // Tilføj ét objekt pr. projekt. Brug relative stier til projektfil og miniature.
 const projects = [
-  // Eksempel:
-  // { title: "Projekttitel", author: "Forfatternavn", file: "projects/projekt-1/index.html", image: "projects/projekt-1/thumbnail.jpg" },
+  {
+    id: "tolkeklar",
+    title: "Tolkeklar — møder med ro i maven",
+    author: "Nicklas Kleczewski",
+    file: "projects/tolkeklar/index.html",
+  },
+  {
+    id: "planlaegger-app",
+    title: "Ro — ADHD planlægger",
+    author: "Christian",
+    file: "projects/planlaegger-app/index.html",
+  },
+  {
+    id: "tilgaengeligheds-rpg",
+    title: "Tilgængeligheds-RPG",
+    author: "Christian",
+    file: "projects/tilgaengeligheds-rpg/index.html",
+  },
 ];
 
 const gallery = document.querySelector("#gallery");

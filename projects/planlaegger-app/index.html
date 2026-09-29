@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ro — ADHD planlægger</title>
+<style>
+  :root{
+    --bg:#f5f4f0;
+    --card:#ffffff;
+    --ink:#20242a;
+    --muted:#747a83;
+    --line:#e6e4de;
+    --accent:#6f63c8;
+    --accent-soft:#eeecfb;
+    --green:#4d9b78;
+    --yellow:#e5aa4d;
+    --shadow:0 8px 30px rgba(32,36,42,.07);
+    --radius:20px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  button,input{font:inherit}
+  button{cursor:pointer}
+  .app{max-width:1120px;margin:auto;min-height:100vh;padding:28px 22px 100px}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:750;font-size:20px}
+  .logo{width:38px;height:38px;border-radius:13px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800}
+  .date{color:var(--muted);font-size:14px}
+  .hero{display:grid;grid-template-columns:1.5fr .8fr;gap:18px;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .welcome{padding:27px}
+  h1{font-size:31px;line-height:1.1;margin:0 0 9px;letter-spacing:-.7px}
+  .sub{color:var(--muted);margin:0;line-height:1.5}
+  .focus{margin-top:24px;background:var(--accent-soft);border-radius:16px;padding:17px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .focus strong{display:block;margin-bottom:3px}
+  .small{font-size:13px;color:var(--muted)}
+  .primary{border:0;background:var(--accent);color:#fff;border-radius:12px;padding:11px 15px;font-weight:700}
+  .secondary{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:10px 14px;font-weight:650}
+  .energy{padding:23px}
+  .energy h3{margin:0 0 7px;font-size:15px}
+  .energy-row{display:flex;gap:8px;margin-top:15px}
+  .energy button{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 4px;color:var(--muted)}
+  .energy button.active{background:var(--accent-soft);border-color:#cfc9f3;color:var(--accent);font-weight:700}
+  .layout{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}
+  .section{padding:22px}
+  .section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+  .section h2{font-size:19px;margin:0}
+  .tasks{display:flex;flex-direction:column;gap:9px}
+  .task{display:flex;align-items:center;gap:13px;padding:14px;border:1px solid var(--line);border-radius:15px;transition:.2s}
+  .task.done{opacity:.55;background:#fafaf9}
+  .task.done .task-title{text-decoration:line-through}
+  .check{width:23px;height:23px;border-radius:50%;border:2px solid #c9c8c2;background:#fff;flex:none;display:grid;place-items:center;color:#fff}
+  .task.done .check{background:var(--green);border-color:var(--green)}
+  .task-main{flex:1;min-width:0}
+  .task-title{font-weight:650}
+  .meta{display:flex;gap:9px;margin-top:4px;font-size:12px;color:var(--muted)}
+  .tag{padding:3px 7px;border-radius:7px;background:#f2f1ed}
+  .add{width:100%;margin-top:12px;border:1.5px dashed #cfcfc9;background:transparent;border-radius:14px;padding:13px;color:var(--muted);font-weight:650}
+  .side-block{margin-bottom:18px}
+  .next{display:flex;gap:12px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+  .next:last-child{border-bottom:0}
+  .time{font-size:12px;color:var(--muted);width:44px;padding-top:2px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);margin-top:6px}
+  .next strong{font-size:14px}
+  .empty{padding:22px 5px;color:var(--muted);text-align:center;display:none}
+  .modal{position:fixed;inset:0;background:rgba(25,28,33,.35);display:none;align-items:center;justify-content:center;padding:20px}
+  .modal.open{display:flex}
+  .dialog{width:min(460px,100%);background:#fff;border-radius:22px;padding:24px;box-shadow:0 20px 70px rgba(0,0,0,.18)}
+  .dialog h2{margin:0 0 17px}
+  label{font-size:13px;color:var(--muted);display:block;margin:12px 0 6px}
+  input{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;outline:none}
+  input:focus{border-color:#aaa2e6;box-shadow:0 0 0 3px var(--accent-soft)}
+  .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+  @media(max-width:780px){
+    .hero,.layout{grid-template-columns:1fr}
+    h1{font-size:27px}
+    .app{padding:20px 14px 70px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand"><div class="logo">R</div> Ro</div>
+    <div class="date" id="today"></div>
+  </header>
+
+  <div class="hero">
+    <section class="card welcome">
+      <h1>Godt at se dig.</h1>
+      <p class="sub">Lad os gøre dagen enkel. Du behøver ikke nå det hele.</p>
+      <div class="focus">
+        <div><strong>Dagens fokus</strong><span class="small">Vælg én ting, der gør dagen lettere.</span></div>
+        <button class="primary" onclick="focusTask()">Vælg fokus</button>
+      </div>
+    </section>
+    <section class="card energy">
+      <h3>Hvordan er din energi?</h3>
+      <div class="small">Det hjælper appen med at prioritere.</div>
+      <div class="energy-row">
+        <button onclick="setEnergy(this,'Lav')">Lav</button>
+        <button onclick="setEnergy(this,'Okay')">Okay</button>
+        <button onclick="setEnergy(this,'God')" class="active">God</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="layout">
+    <section class="card section">
+      <div class="section-head">
+        <h2>Din dag</h2>
+        <span class="small" id="count"></span>
+      </div>
+      <div class="tasks" id="tasks"></div>
+      <div class="empty" id="empty">Ingen opgaver endnu. Det er også helt okay.</div>
+      <button class="add" onclick="openModal()">＋ Tilføj en opgave</button>
+    </section>
+
+    <aside>
+      <section class="card section side-block">
+        <div class="section-head"><h2>Næste</h2><span class="small">i dag</span></div>
+        <div id="next"></div>
+      </section>
+      <section class="card section">
+        <h2 style="font-size:17px;margin:0 0 9px">Et lille råd</h2>
+        <p class="sub" style="font-size:14px">Hvis noget føles for stort, så gør kun det første lille skridt.</p>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="dialog">
+    <h2>Ny opgave</h2>
+    <label for="title">Hvad skal gøres?</label>
+    <input id="title" placeholder="Fx. Send mail til Anna">
+    <label for="time">Tidspunkt <span>(valgfrit)</span></label>
+    <input id="time" type="time">
+    <label for="duration">Hvor lang tid?</label>
+    <input id="duration" placeholder="Fx. 15 min">
+    <div class="actions">
+      <button class="secondary" onclick="closeModal()">Annuller</button>
+      <button class="primary" onclick="addTask()">Tilføj</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  energy:'God',
+  tasks:[
+    {id:1,title:'Tjek dagens vigtigste beskeder',time:'09:00',duration:'10 min',done:false},
+    {id:2,title:'Arbejd på det vigtigste projekt',time:'10:00',duration:'45 min',done:false},
+    {id:3,title:'Frokost og pause',time:'12:00',duration:'30 min',done:false},
+    {id:4,title:'En lille praktisk ting',time:'14:00',duration:'15 min',done:false}
+  ]
+};
+
+function render(){
+  const tasks=document.getElementById('tasks');
+  tasks.innerHTML='';
+  state.tasks.forEach(t=>{
+    const el=document.createElement('div');
+    el.className='task '+(t.done?'done':'');
+    el.innerHTML=`<button class="check" aria-label="Marker færdig" onclick="toggleTask(${t.id})">${t.done?'✓':''}</button>
+      <div class="task-main"><div class="task-title">${escapeHtml(t.title)}</div>
+      <div class="meta"><span class="tag">${t.time||'Når det passer'}</span><span>${escapeHtml(t.duration||'')}</span></div></div>`;
+    tasks.appendChild(el);
+  });
+  const left=state.tasks.filter(t=>!t.done).length;
+  document.getElementById('count').textContent=left+' tilbage';
+  document.getElementById('empty').style.display=state.tasks.length?'none':'block';
+  renderNext();
+}
+function renderNext(){
+  const next=document.getElementById('next');
+  const upcoming=state.tasks.filter(t=>!t.done && t.time).slice(0,3);
+  next.innerHTML=upcoming.length?upcoming.map(t=>`<div class="next"><div class="time">${t.time}</div><div class="dot"></div><div><strong>${escapeHtml(t.title)}</strong><div class="small">${escapeHtml(t.duration||'')}</div></div></div>`).join(''):'<div class="small">Du har ingen næste opgave.</div>';
+}
+function toggleTask(id){const t=state.tasks.find(x=>x.id===id);t.done=!t.done;render()}
+function setEnergy(btn,value){document.querySelectorAll('.energy button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');state.energy=value}
+function focusTask(){
+  const t=state.tasks.find(x=>!x.done);
+  if(!t)return alert('Du er færdig for nu 🎉');
+  document.querySelectorAll('.task').forEach((el,i)=>{if(state.tasks[i].id===t.id){el.style.borderColor='var(--accent)';el.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>el.style.borderColor='',1200)}})
+}
+function openModal(){document.getElementById('modal').classList.add('open');document.getElementById('title').focus()}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.getElementById('title').value='';document.getElementById('time').value='';document.getElementById('duration').value=''}
+function addTask(){
+  const title=document.getElementById('title').value.trim();
+  if(!title){document.getElementById('title').focus();return}
+  state.tasks.push({id:Date.now(),title,time:document.getElementById('time').value,duration:document.getElementById('duration').value.trim(),done:false});
+  state.tasks.sort((a,b)=>(a.time||'99:99').localeCompare(b.time||'99:99'));
+  closeModal();render();
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+const d=new Date();document.getElementById('today').textContent=d.toLocaleDateString('da-DK',{weekday:'long',day:'numeric',month:'long'});
+render();
+</script>
+</body>
+</html>
