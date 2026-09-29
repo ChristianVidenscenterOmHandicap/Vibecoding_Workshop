@@ -17,6 +17,12 @@ if (selected) {
   document.querySelector("#project-author").textContent = selected.author;
   document.querySelector("#project-frame").src = selected.file;
 } else {
+  if (projects.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "Projekterne vises her, når de er lagt ind.";
+    gallery.append(empty);
+  }
   for (const project of projects) {
     const card = document.createElement("a");
     card.className = "project-card";
