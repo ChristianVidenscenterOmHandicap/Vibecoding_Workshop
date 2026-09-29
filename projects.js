@@ -47,6 +47,7 @@ if (selected) {
   detail.hidden = false;
   document.title = `${selected.title} — Workshopprojekter`;
   document.querySelector("#project-title").textContent = selected.title;
+  projectFrame.title = `${selected.title} – interaktiv projektvisning`;
   document.querySelector("#project-author").textContent = selected.author;
   const description = document.querySelector("#project-description");
   if (selected.description) {
@@ -78,6 +79,7 @@ if (selected) {
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       link.textContent = label;
+      link.setAttribute("aria-label", `${label} (åbner i ny fane)`);
       links.append(link);
     }
     teaser.append(links);
@@ -112,6 +114,7 @@ if (selected) {
     const card = document.createElement("a");
     card.className = "project-card";
     card.href = `?projekt=${encodeURIComponent(project.id)}`;
+    card.setAttribute("aria-label", `Åbn ${project.title}, projekt af ${project.author}`);
     let image = document.createElement("div");
     image.className = "project-image";
     if (project.image) {
@@ -132,6 +135,7 @@ if (selected) {
     gallery.append(card);
   }
 }
+
 
 
 
