@@ -1,6 +1,13 @@
 // Tilføj ét objekt pr. projekt. Brug relative stier til projektfil og miniature.
 const projects = [
   {
+    id: "matematik-med-guden-alf",
+    title: "Mette Frederiksen laver matematik med Guden Alf",
+    author: "Alf",
+    description: "projects/matematik-med-guden-alf/description.txt",
+    file: "projects/matematik-med-guden-alf/index.html",
+  },
+  {
     id: "forhindringsassistent",
     title: "Forhindringsassistent",
     author: "Christian Bundgaard",
@@ -149,6 +156,7 @@ if (selected) {
     gallery.append(card);
   }
 }
+
 
 
 
