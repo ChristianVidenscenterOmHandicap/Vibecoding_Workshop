@@ -6,6 +6,7 @@ const projects = [
     author: "Alf",
     description: "projects/matematik-med-guden-alf/description.txt",
     file: "projects/matematik-med-guden-alf/index.html",
+    image: "projects/matematik-med-guden-alf/thumbnail.png",
   },
   {
     id: "forhindringsassistent",
@@ -13,6 +14,7 @@ const projects = [
     author: "Christian Bundgaard",
     description: "projects/forhindringsassistent/description.txt",
     file: "projects/forhindringsassistent/index.html",
+    image: "projects/forhindringsassistent/thumbnail.png",
   },
   {
     id: "tilgaengelig-handel",
@@ -20,6 +22,7 @@ const projects = [
     author: "Erik Vind Frost",
     description: "projects/tilgaengelig-handel/description.txt",
     file: "projects/tilgaengelig-handel/index.html",
+    image: "projects/tilgaengelig-handel/thumbnail.png",
   },
   {
     id: "tolkeklar",
@@ -156,6 +159,7 @@ if (selected) {
     gallery.append(card);
   }
 }
+
 
 
 
