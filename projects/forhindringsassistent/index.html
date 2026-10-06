@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forhindringsassistent – demo</title>
+<style>
+  :root{
+    --bg:#f4f6f8; --panel:#fff; --text:#111827; --muted:#4b5563;
+    --accent:#075985; --accent2:#0c4a6e; --danger:#b91c1c;
+    --border:#cbd5e1; --focus:#f59e0b; --ok:#166534;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;line-height:1.5}
+  main{max-width:760px;margin:0 auto;padding:20px}
+  .app{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 4px 16px #00000012}
+  h1{font-size:30px;margin:0 0 8px}
+  h2{font-size:21px;margin:0 0 10px}
+  p{margin:7px 0}
+  .intro{color:var(--muted);margin-bottom:20px}
+  .status{border:2px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;background:#f8fafc}
+  .status strong{font-size:20px}
+  .alert{border-left:7px solid var(--danger);background:#fef2f2;padding:16px;border-radius:8px;margin-top:14px}
+  .clear{border-left:7px solid var(--ok);background:#f0fdf4;padding:16px;border-radius:8px;margin-top:14px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+  button{appearance:none;border:0;border-radius:10px;background:var(--accent);color:#fff;padding:14px 18px;font-size:17px;font-weight:700;cursor:pointer;min-height:50px}
+  button.secondary{background:#334155}
+  button.danger{background:var(--danger)}
+  button:focus-visible{outline:4px solid var(--focus);outline-offset:3px}
+  .controls{border-top:1px solid var(--border);margin-top:20px;padding-top:20px}
+  label{display:block;font-weight:700;margin:12px 0 5px}
+  select,input{font:inherit;width:100%;padding:12px;border:2px solid var(--border);border-radius:8px;background:#fff;color:var(--text)}
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .note{font-size:14px;color:var(--muted);margin-top:14px}
+  .events{margin-top:18px}
+  .events ul{padding-left:22px}
+  .badge{display:inline-block;padding:3px 8px;border-radius:99px;background:#e2e8f0;font-size:13px;font-weight:700}
+  @media(max-width:560px){main{padding:10px}.app{padding:16px}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<main>
+  <section class="app" aria-labelledby="title">
+    <h1 id="title">Forhindringsassistent</h1>
+    <p class="intro">
+      En realtidsdemo til blinde og svagsynede. Appen er bygget til løbende at give
+      talebeskeder om forhindringer foran dig.
+    </p>
+
+    <section aria-labelledby="live-heading">
+      <h2 id="live-heading">Realtidsregistrering</h2>
+
+      <div id="status" class="status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1">
+        <p><strong id="headline">Registrering er stoppet</strong></p>
+        <p id="detail">Tryk på Start realtidsregistrering for at begynde.</p>
+      </div>
+
+      <div id="warning" class="clear" role="alert" aria-live="assertive" aria-atomic="true">
+        <strong>Ingen aktiv advarsel.</strong>
+        <p>Appen overvåger ikke omgivelserne endnu.</p>
+      </div>
+
+      <div class="row">
+        <button id="start">Start realtidsregistrering</button>
+        <button id="stop" class="secondary" disabled>Stop realtidsregistrering</button>
+      </div>
+
+      <p id="running-description" class="note">
+        Når registreringen er aktiv, ændrer demoen automatisk situation med få sekunders mellemrum.
+        I en senere version skal denne del erstattes af rigtig kamera- og AI-analyse.
+      </p>
+    </section>
+
+    <section class="controls" aria-labelledby="settings-heading">
+      <h2 id="settings-heading">Indstillinger</h2>
+
+      <label for="distance">Advarselsafstand</label>
+      <select id="distance">
+        <option value="2">2 meter</option>
+        <option value="5" selected>5 meter</option>
+        <option value="10">10 meter</option>
+      </select>
+
+      <label for="sound">Talemeddelelser</label>
+      <select id="sound">
+        <option value="on" selected>Til</option>
+        <option value="off">Fra</option>
+      </select>
+
+      <label for="interval">Kontrolinterval i demoen</label>
+      <select id="interval">
+        <option value="2">Hvert 2. sekund</option>
+        <option value="3" selected>Hvert 3. sekund</option>
+        <option value="5">Hvert 5. sekund</option>
+      </select>
+
+      <p class="note">
+        Vigtigt: Dette er stadig en prototype. Den kan ikke endnu garantere sikker
+        realtidsdetektion af cykler, personer eller andre objekter.
+      </p>
+    </section>
+
+    <section class="events" aria-labelledby="events-heading">
+      <h2 id="events-heading">Seneste registreringer</h2>
+      <ol id="log" aria-live="off">
+        <li>Ingen registreringer endnu.</li>
+      </ol>
+      <button id="clear-log" class="secondary">Ryd registreringer</button>
+    </section>
+
+    <section class="controls" aria-labelledby="keyboard-heading">
+      <h2 id="keyboard-heading">Tastaturhjælp</h2>
+      <p><strong>Tab:</strong> flyt til næste kontrol.</p>
+      <p><strong>Enter eller mellemrum:</strong> aktivér en knap.</p>
+      <p><strong>H:</strong> JAWS kan bruge overskriftsnavigation til at springe mellem sektionerne.</p>
+      <p><strong>F6:</strong> kan bruges til at flytte fokus mellem browserens områder, afhængigt af din JAWS-opsætning.</p>
+    </section>
+  </section>
+</main>
+
+<script>
+(() => {
+  const situations = [
+    {name:"Cykel", distance:4, direction:"lige foran dig", movement:"står stille", severity:"danger"},
+    {name:"Cykel", distance:3, direction:"lidt til højre", movement:"bevæger sig mod dig", severity:"danger"},
+    {name:"Person", distance:6, direction:"lige foran dig", movement:"går på tværs", severity:"danger"},
+    {name:"Skraldespand", distance:2, direction:"lidt til venstre", movement:"står stille", severity:"danger"},
+    {name:"Byggehegn", distance:8, direction:"lige foran dig", movement:"står stille", severity:"danger"},
+    {name:"Ingen forhindring", distance:null, direction:"", movement:"", severity:"clear"}
+  ];
+
+  let index = 0;
+  let timer = null;
+  let running = false;
+
+  const $ = id => document.getElementById(id);
+
+  function speak(text) {
+    if ($("sound").value !== "on" || !("speechSynthesis" in window)) return;
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "da-DK";
+    utterance.rate = 1.0;
+    speechSynthesis.speak(utterance);
+  }
+
+  function threshold() {
+    return Number($("distance").value);
+  }
+
+  function addLog(text) {
+    const log = $("log");
+    if (log.children.length === 1 &&
+        log.firstElementChild.textContent === "Ingen registreringer endnu.") {
+      log.innerHTML = "";
+    }
+    const li = document.createElement("li");
+    li.textContent = new Date().toLocaleTimeString("da-DK", {
+      hour:"2-digit", minute:"2-digit", second:"2-digit"
+    }) + ": " + text;
+    log.prepend(li);
+    while (log.children.length > 8) log.lastElementChild.remove();
+  }
+
+  function announceSituation() {
+    const s = situations[index];
+    index = (index + 1) % situations.length;
+
+    if (s.severity === "clear") {
+      $("headline").textContent = "Ingen forhindring registreret";
+      $("detail").textContent = "Der er ikke registreret en aktiv forhindring i denne demosituation.";
+      $("warning").className = "clear";
+      $("warning").innerHTML =
+        "<strong>Vejen er fri i denne demosituation.</strong>" +
+        "<p>Fortsæt med opmærksomhed på omgivelserne.</p>";
+      speak("Ingen forhindring registreret");
+      addLog("Ingen forhindring registreret");
+      return;
+    }
+
+    const limit = threshold();
+
+    if (s.distance <= limit) {
+      const text = `Pas på. ${s.name}, cirka ${s.distance} meter ${s.direction}. ${s.movement}.`;
+      $("headline").textContent = "ADVARSEL";
+      $("detail").textContent =
+        `${s.name}, cirka ${s.distance} meter ${s.direction}. ${s.movement}.`;
+      $("warning").className = "alert";
+      $("warning").innerHTML =
+        `<strong>Pas på: ${s.name}.</strong>` +
+        `<p>Cirka ${s.distance} meter ${s.direction}. ${s.movement}.</p>`;
+      speak(text);
+      addLog(text);
+    } else {
+      $("headline").textContent = "Forhindring registreret";
+      $("detail").textContent =
+        `${s.name}, ${s.distance} meter ${s.direction}. Afstanden er større end din valgte advarselsafstand.`;
+      $("warning").className = "clear";
+      $("warning").innerHTML =
+        `<strong>Forhindring på afstand.</strong>` +
+        `<p>${s.name}, cirka ${s.distance} meter ${s.direction}.</p>`;
+    }
+  }
+
+  function start() {
+    if (running) return;
+    running = true;
+    $("start").disabled = true;
+    $("stop").disabled = false;
+    $("headline").textContent = "Realtidsregistrering er aktiv";
+    $("detail").textContent = "Appen kontrollerer situationen løbende.";
+    speak("Realtidsregistrering startet");
+    addLog("Realtidsregistrering startet");
+    announceSituation();
+
+    const ms = Number($("interval").value) * 1000;
+    timer = setInterval(announceSituation, ms);
+  }
+
+  function stop() {
+    running = false;
+    clearInterval(timer);
+    timer = null;
+    $("start").disabled = false;
+    $("stop").disabled = true;
+    $("headline").textContent = "Registrering er stoppet";
+    $("detail").textContent = "Tryk på Start realtidsregistrering for at begynde igen.";
+    $("warning").className = "clear";
+    $("warning").innerHTML =
+      "<strong>Ingen aktiv advarsel.</strong><p>Appen overvåger ikke omgivelserne.</p>";
+    speak("Realtidsregistrering stoppet");
+    addLog("Realtidsregistrering stoppet");
+  }
+
+  $("start").addEventListener("click", start);
+  $("stop").addEventListener("click", stop);
+
+  $("clear-log").addEventListener("click", () => {
+    $("log").innerHTML = "<li>Ingen registreringer endnu.</li>";
+    speak("Registreringer ryddet");
+  });
+
+  $("interval").addEventListener("change", () => {
+    if (!running) return;
+    clearInterval(timer);
+    timer = setInterval(announceSituation, Number($("interval").value) * 1000);
+    speak("Kontrolinterval ændret");
+  });
+
+  $("distance").addEventListener("change", () => {
+    if (running) speak(`Advarselsafstand ${threshold()} meter`);
+  });
+
+  $("sound").addEventListener("change", () => {
+    if ($("sound").value === "on") speak("Talemeddelelser slået til");
+  });
+})();
+</script>
+</body>
+</html>

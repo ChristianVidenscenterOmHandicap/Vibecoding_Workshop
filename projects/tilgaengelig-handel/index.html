@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tilgængelig Handel – Demo</title>
+<style>
+  :root{
+    --bg:#f4f6f8; --card:#fff; --text:#17202a; --muted:#5e6b78;
+    --primary:#165dff; --primary-dark:#0d46c7; --border:#d9e0e7;
+    --focus:#ffb000; --success:#16794c;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;line-height:1.5;
+  }
+  button,input,textarea,select{font:inherit}
+  button{cursor:pointer}
+  .skip-link{
+    position:absolute;left:12px;top:-60px;z-index:1000;
+    background:#fff;color:var(--text);padding:12px 16px;
+    border:3px solid var(--primary);border-radius:10px;font-weight:700;
+  }
+  .skip-link:focus{top:12px}
+  .app{max-width:1000px;margin:0 auto;padding:24px}
+  header{
+    display:flex;justify-content:space-between;align-items:center;
+    gap:20px;margin-bottom:22px;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:44px;height:44px;border-radius:12px;background:var(--primary);
+    color:white;display:grid;place-items:center;font-weight:800;font-size:20px;
+  }
+  h1{font-size:25px;margin:0}
+  h2{font-size:22px;margin:0 0 8px}
+  h3{margin:0 0 5px}
+  .tag{
+    background:#e8f0ff;color:#1649b8;padding:7px 11px;
+    border-radius:999px;font-size:13px;font-weight:700;
+  }
+  .progress{
+    display:flex;gap:6px;margin-bottom:18px;
+  }
+  .dot{height:8px;flex:1;border-radius:99px;background:#dce2e8}
+  .dot.active{background:var(--primary)}
+  .card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:18px;padding:26px;
+    box-shadow:0 5px 18px rgba(20,35,50,.05);
+  }
+  .intro{color:var(--muted);margin:0 0 22px}
+  label{display:block;font-weight:700;margin:0 0 8px}
+  input,textarea,select{
+    width:100%;padding:14px 15px;border:2px solid var(--border);
+    border-radius:12px;background:#fff;color:var(--text);
+  }
+  textarea{min-height:120px;resize:vertical}
+  input:focus-visible,textarea:focus-visible,select:focus-visible,
+  button:focus-visible{
+    outline:4px solid var(--focus);outline-offset:3px;
+    border-color:var(--primary);
+  }
+  .actions{
+    display:flex;justify-content:space-between;gap:12px;margin-top:24px;
+  }
+  .btn{
+    border:0;border-radius:12px;padding:13px 18px;font-weight:700;
+  }
+  .btn.primary{background:var(--primary);color:#fff}
+  .btn.primary:hover{background:var(--primary-dark)}
+  .btn.secondary{background:#eef1f4;color:var(--text)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .option-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px;
+  }
+  .option{
+    border:2px solid var(--border);border-radius:14px;padding:15px;
+    background:#fff;text-align:left;color:var(--text);
+  }
+  .option:hover{border-color:#8aa9ed}
+  .option.selected{
+    border-color:var(--primary);background:#f3f7ff;
+    box-shadow:0 0 0 2px var(--primary) inset;
+  }
+  .price{font-size:20px;font-weight:800;margin-top:5px}
+  .meta{color:var(--muted);font-size:14px}
+  .notice{
+    background:#f7f9fb;border-left:4px solid var(--primary);
+    padding:12px 14px;margin:16px 0;border-radius:8px;
+  }
+  .error{
+    color:#9b1c1c;font-weight:700;min-height:24px;margin-top:8px;
+  }
+  .review{display:grid;gap:10px;margin-top:18px}
+  .row{
+    display:flex;justify-content:space-between;gap:20px;
+    border-bottom:1px solid #edf0f3;padding:10px 0;
+  }
+  .row:last-child{border-bottom:0}
+  .success{text-align:center;padding:22px 5px}
+  .check{font-size:48px;color:var(--success)}
+  .small{font-size:13px;color:var(--muted)}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
+  @media(max-width:650px){
+    .app{padding:14px}.card{padding:20px}
+    .option-grid{grid-template-columns:1fr}
+    header{align-items:flex-start;flex-direction:column}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Spring til hovedindhold</a>
+
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true">T</div>
+      <div>
+        <h1>Tilgængelig Handel</h1>
+        <div class="small">En enkel vej fra behov til godkendt ordre</div>
+      </div>
+    </div>
+    <div class="tag">Demo · V1</div>
+  </header>
+
+  <div class="progress" aria-label="Fremskridt gennem 5 trin">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div id="step-status" class="sr-only" aria-live="polite"></div>
+
+  <main id="main-content" tabindex="-1"></main>
+</div>
+
+<script>
+const state = {
+  step: 1,
+  product: "",
+  info: "",
+  supplier: null,
+  delivery: "Standardlevering",
+  payment: "MobilePay",
+  moveFocus: false
+};
+
+const suppliers = [
+  {name:"Leverandør A", detail:"På lager · levering 1–2 hverdage", price:799, shipping:0},
+  {name:"Leverandør B", detail:"På lager · levering 2–4 hverdage", price:749, shipping:39},
+  {name:"Leverandør C", detail:"På lager · levering 1–3 hverdage", price:825, shipping:0}
+];
+
+function render(){
+  const app=document.getElementById("main-content");
+
+  document.querySelectorAll(".dot").forEach((dot,i)=>{
+    dot.classList.toggle("active",i < state.step);
+  });
+
+  if(state.step===1) app.innerHTML=step1();
+  if(state.step===2) app.innerHTML=step2();
+  if(state.step===3) app.innerHTML=step3();
+  if(state.step===4) app.innerHTML=step4();
+  if(state.step===5) app.innerHTML=step5();
+
+  document.getElementById("step-status").textContent =
+    `Trin ${state.step} af 5.`;
+
+  if(state.moveFocus){
+    app.focus();
+    state.moveFocus=false;
+  }
+}
+
+function step1(){
+ return `<section class="card" aria-labelledby="heading-step1">
+   <h2 id="heading-step1">1. Hvilket produkt leder du efter?</h2>
+   <p class="intro">
+     Skriv produktet med dine egne ord. Du behøver ikke kende det præcise navn eller mærke.
+   </p>
+
+   <label for="product">Produkt</label>
+   <input id="product" value="${esc(state.product)}"
+     placeholder="Fx trådløse høretelefoner med støjreduktion"
+     aria-describedby="product-help product-error"
+     aria-invalid="false"
+     autocomplete="off">
+   <div id="product-help" class="small">
+     Eksempel: "trådløse høretelefoner med støjreduktion".
+   </div>
+   <div id="product-error" class="error" role="alert"></div>
+
+   <div class="notice">
+     Du kan senere ændre eller præcisere dit ønske, hvis resultaterne ikke passer.
+   </div>
+
+   <div class="actions">
+     <span></span>
+     <button class="btn primary" type="button" onclick="nextFrom1()">Næste</button>
+   </div>
+ </section>`;
+}
+
+function step2(){
+ return `<section class="card" aria-labelledby="heading-step2">
+   <h2 id="heading-step2">2. Hvad vil du vide?</h2>
+   <p class="intro">
+     Beskriv de oplysninger, der er vigtige for dig, før du vælger et produkt.
+   </p>
+
+   <label for="info">Dine krav eller spørgsmål</label>
+   <textarea id="info"
+     placeholder="Fx pris, batteritid, størrelse, garanti, leveringstid eller om den er kompatibel med min telefon."
+     aria-describedby="info-help">${esc(state.info)}</textarea>
+   <div id="info-help" class="small">
+     Du kan skrive flere krav eller spørgsmål. Feltet må gerne være tomt.
+   </div>
+
+   <div class="actions">
+     <button class="btn secondary" type="button" onclick="back()">Tilbage</button>
+     <button class="btn primary" type="button" onclick="nextFrom2()">Find muligheder</button>
+   </div>
+ </section>`;
+}
+
+function step3(){
+ return `<section class="card" aria-labelledby="heading-step3">
+   <h2 id="heading-step3">3. Mulige leverandører og priser</h2>
+   <p class="intro">
+     Her vises et eksempel på, hvordan appen kan samle muligheder i et overskueligt format.
+     Vælg én mulighed for at fortsætte.
+   </p>
+
+   <div class="option-grid" role="group" aria-label="Mulige leverandører">
+     ${suppliers.map((s,i)=>`
+       <button class="option ${state.supplier===i?'selected':''}"
+         type="button"
+         onclick="choose(${i})"
+         aria-pressed="${state.supplier===i}"
+         aria-label="${s.name}, ${s.price} kroner, ${s.shipping ? s.shipping + ' kroner levering' : 'fri levering'}, ${s.detail}">
+         <h3>${s.name}</h3>
+         <div class="meta">${s.detail}</div>
+         <div class="price">${s.price.toLocaleString("da-DK")} kr.</div>
+         <div class="meta">${s.shipping ? `+ ${s.shipping} kr. levering` : "Fri levering"}</div>
+       </button>
+     `).join("")}
+   </div>
+
+   <div class="notice">
+     <strong>Demo:</strong> I en rigtig version kan dette trin hente aktuelle priser,
+     lagerstatus, produktdata og tilgængelig information fra relevante webshops.
+   </div>
+
+   <div class="actions">
+     <button class="btn secondary" type="button" onclick="back()">Tilbage</button>
+     <button class="btn primary" type="button" onclick="nextFrom3()" ${state.supplier===null?"disabled":""}>
+       Gå til godkendelse
+     </button>
+   </div>
+ </section>`;
+}
+
+function step4(){
+ const s=suppliers[state.supplier];
+ const total=s.price+s.shipping;
+
+ return `<section class="card" aria-labelledby="heading-step4">
+   <h2 id="heading-step4">4. Gennemse og godkend</h2>
+   <p class="intro">
+     Du bestemmer selv, om ordren er korrekt, før betaling.
+   </p>
+
+   <div class="review" aria-label="Ordreoversigt">
+    <div class="row"><span>Produkt</span><strong>${esc(state.product)}</strong></div>
+    <div class="row"><span>Leverandør</span><strong>${s.name}</strong></div>
+    <div class="row"><span>Varepris</span><strong>${s.price.toLocaleString("da-DK")} kr.</strong></div>
+    <div class="row"><span>Levering</span><strong>${s.shipping ? s.shipping.toLocaleString("da-DK")+" kr." : "Gratis"}</strong></div>
+    <div class="row"><span>Total</span><strong>${total.toLocaleString("da-DK")} kr.</strong></div>
+   </div>
+
+   <label for="delivery" style="margin-top:20px">Levering</label>
+   <select id="delivery" onchange="state.delivery=this.value">
+     <option>Standardlevering</option>
+     <option>Hurtig levering</option>
+   </select>
+
+   <label for="payment" style="margin-top:16px">Betaling</label>
+   <select id="payment" onchange="state.payment=this.value">
+     <option>MobilePay</option>
+     <option>Apple Pay</option>
+   </select>
+
+   <div class="notice">
+     <strong>Godkendelsespunkt:</strong>
+     I en rigtig version stopper appen her og sender dig til den valgte betalingsløsning.
+     Du godkender selv ordre, beløb og leverance.
+   </div>
+
+   <div class="actions">
+     <button class="btn secondary" type="button" onclick="back()">Tilbage</button>
+     <button class="btn primary" type="button" onclick="confirmOrder()">Godkend og betal</button>
+   </div>
+ </section>`;
+}
+
+function step5(){
+ return `<section class="card success" aria-labelledby="heading-step5">
+   <div class="check" aria-hidden="true">✓</div>
+   <h2 id="heading-step5">Ordren er godkendt</h2>
+   <p class="intro">
+     Dette er kun en demo. I en rigtig løsning vil betalingen og ordrebekræftelsen
+     ske gennem en sikker betalingsintegration.
+   </p>
+
+   <div class="review" aria-label="Ordrebekræftelse">
+    <div class="row"><span>Produkt</span><strong>${esc(state.product)}</strong></div>
+    <div class="row"><span>Leverandør</span><strong>${suppliers[state.supplier].name}</strong></div>
+    <div class="row"><span>Betaling</span><strong>${state.payment}</strong></div>
+   </div>
+
+   <div class="actions">
+     <button class="btn secondary" type="button" onclick="back()">Se ordre</button>
+     <button class="btn primary" type="button" onclick="reset()">Start ny søgning</button>
+   </div>
+ </section>`;
+}
+
+function nextFrom1(){
+  const input=document.getElementById("product");
+  const error=document.getElementById("product-error");
+  const value=input.value.trim();
+
+  if(!value){
+    error.textContent="Skriv venligst et produkt, før du går videre.";
+    input.setAttribute("aria-invalid","true");
+    input.focus();
+    return;
+  }
+
+  error.textContent="";
+  input.setAttribute("aria-invalid","false");
+  state.product=value;
+  state.step=2;
+  state.moveFocus=true;
+  render();
+}
+
+function nextFrom2(){
+  state.info=document.getElementById("info").value.trim();
+  state.step=3;
+  state.moveFocus=true;
+  render();
+}
+
+function choose(i){
+  state.supplier=i;
+  render();
+}
+
+function nextFrom3(){
+  if(state.supplier!==null){
+    state.step=4;
+    state.moveFocus=true;
+    render();
+  }
+}
+
+function confirmOrder(){
+  state.step=5;
+  state.moveFocus=true;
+  render();
+}
+
+function back(){
+  if(state.step>1){
+    state.step--;
+    state.moveFocus=true;
+    render();
+  }
+}
+
+function reset(){
+  Object.assign(state,{
+    step:1,product:"",info:"",supplier:null,
+    delivery:"Standardlevering",payment:"MobilePay",moveFocus:true
+  });
+  render();
+}
+
+function esc(value){
+  return String(value||"").replace(/[&<>"']/g,m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[m]));
+}
+
+render();
+</script>
+</body>
+</html>

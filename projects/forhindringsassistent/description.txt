@@ -1,0 +1,1 @@
+En realtidsdemo, der giver talebeskeder om forhindringer foran brugeren.

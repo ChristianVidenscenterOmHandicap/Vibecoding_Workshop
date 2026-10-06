@@ -1,6 +1,20 @@
 // Tilføj ét objekt pr. projekt. Brug relative stier til projektfil og miniature.
 const projects = [
   {
+    id: "forhindringsassistent",
+    title: "Forhindringsassistent",
+    author: "Christian Bundgaard",
+    description: "projects/forhindringsassistent/description.txt",
+    file: "projects/forhindringsassistent/index.html",
+  },
+  {
+    id: "tilgaengelig-handel",
+    title: "Tilgængelig Handel",
+    author: "Erik Vind Frost",
+    description: "projects/tilgaengelig-handel/description.txt",
+    file: "projects/tilgaengelig-handel/index.html",
+  },
+  {
     id: "tolkeklar",
     title: "Tolkeklar",
     author: "Nicklas Kleczewski",
@@ -135,6 +149,7 @@ if (selected) {
     gallery.append(card);
   }
 }
+
 
 
 
